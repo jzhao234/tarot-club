@@ -1,0 +1,41 @@
+# Sample systemd unit for Tarot Club. Copy to /etc/systemd/system/arcana.service
+# and adjust WorkingDirectory, User/Group, and the EnvironmentFile path.
+#
+#   sudo cp deploy/arcana.service /etc/systemd/system/
+#   sudoedit /etc/systemd/system/arcana.env   # OPENROUTER_API_KEY=..., ARCANA_*
+#   sudo systemctl daemon-reload && sudo systemctl enable --now arcana
+#   journalctl -u arcana -f
+
+[Unit]
+Description=Tarot Club — semantic model router
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=arcana
+Group=arcana
+WorkingDirectory=/opt/tarot-club
+
+# Secrets + config (chmod 600, owned by the service user). At minimum:
+#   OPENROUTER_API_KEY=sk-or-...
+#   ARCANA_ADDR=127.0.0.1:8090
+#   ARCANA_STATE_FILE=/opt/tarot-club/data/arcana-state.json
+EnvironmentFile=/etc/systemd/system/arcana.env
+
+ExecStart=/usr/bin/npm start
+Restart=on-failure
+RestartSec=2
+# Give the embedding model time to load on first start (Hub download).
+TimeoutStartSec=120
+
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+# Allow writes only to the state directory.
+ReadWritePaths=/opt/tarot-club/data
+
+[Install]
+WantedBy=multi-user.target
