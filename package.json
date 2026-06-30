@@ -1,0 +1,23 @@
+{
+  "name": "tarot-club",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Tarot Club — a sticky semantic model router. Exposes one virtual model (\"arcana\") that picks the best real model for each turn by meaning (server-side embeddings) and pins it per conversation so context sticks. Works as an OpenAI-compatible proxy or a decide-only endpoint.",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "eval": "tsx scripts/eval.ts"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.0",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.9"
+  }
+}
